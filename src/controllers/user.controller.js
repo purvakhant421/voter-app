@@ -2,12 +2,13 @@ const { userService, emailService } = require("../services");
 
 const register = async (req, res) => {
   // validation;
-  const { email, password } = req.body;
+  const { email, password, role } = req.body;
 
-  const hashPassword = await bcrypt.hash(password, 8);
+  //const hashPassword = await bcrypt.hash(password, 8);
 
   let option = {
     email,
+    password,
     exp: moment().add(1, "days").unix(),
   };
 
@@ -15,15 +16,14 @@ const register = async (req, res) => {
 
   const filter = {
     email,
-    password: hashPassword,
-    token,
+    password,
   };
 
   const data = await userService.createUser(filter);
 
   res.status(200).json({ data });
 };
-
+s
 const login = async (req, res) => {
   try {
     // validation;
@@ -32,17 +32,18 @@ const login = async (req, res) => {
     const findUser = await userService.findUserByEmail({ email });
 
     if (!findUser) throw Error("User not found");
-
-    const successPassword = await bcrypt.compare(password, findUser.password);
-    if (!successPassword) throw Error("Incorrect password");
+    if(password != findUser.password) throw new Error("Password Incorrect")
+    //const successPassword = await bcrypt.compare(password, findUser.password);
+    //if (!successPassword) throw Error("Incorrect password");
 
     let option = {
       email,
+      password,
       exp: moment().add(1, "days").unix(),
     };
 
     let token;
-    if (findUser && successPassword) {
+    if (findUser) {
       token = await jwt.sign(option, jwtSecrectKey);
     }
 
@@ -56,7 +57,6 @@ const login = async (req, res) => {
     res.status(404).json({ error: error.message });
   }
 };
-
 
 /** create user */
 const createUser = async (req, res) => {

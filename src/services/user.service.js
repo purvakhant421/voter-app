@@ -1,5 +1,15 @@
 const { Users } = require("../models");
 
+//register user
+const register = async (reqBody) => {
+  return Users.register(reqBody);
+};
+
+//login user
+const login = async (reqBody) => {
+  return Users.login(reqBody);
+};
+
 // Create user
 const createUser = async (reqBody) => {
   return Users.create(reqBody);
@@ -33,6 +43,8 @@ const deleteUser = async (userId) => {
 };
 
 module.exports = {
+  register,
+  login,
   createUser,
   getUserList,
   getUserById,

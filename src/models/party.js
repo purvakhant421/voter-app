@@ -6,7 +6,7 @@ const partySchema = new mongoose.Schema(
             trim : true,
         },
         // ref user
-        User : {
+        Users : {
             type : mongoose.Types.ObjectId,
             ref : "Users"
         },
